@@ -18,34 +18,43 @@ import com.github.pwittchen.neurosky.library.message.enums.BrainWave;
 import com.github.pwittchen.neurosky.library.message.enums.Signal;
 import com.github.pwittchen.neurosky.library.message.enums.State;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 
 public class EEGActivity extends AppCompatActivity {
-    private final static String LOG_TAG = "NeuroSky";
-    private NeuroSky neuroSky;
-    TextView stateTv;
-    TextView attentionTv;
-    TextView meditationTv;
-    TextView blinkTv;
+    private static final String LOG_TAG = "NeuroSky";
 
-    Button connectButton;
-    Button startMonButton;
-    Button stopMonButton;
-    Button disconnectButton;
-    Button continueToGSRButton;
+    private NeuroSky neuroSky;
+
+    private TextView stateTv, attentionTv; //, mediationTv, blinkTv;
+    private Button connectButton, startMonitorButton, stopMonitorButton, disconnectButton, continueToGSRButton;
+
+    private ArrayList< HashMap<String, String> > brainWaveData;
+
+    private static final String SEPARATOR = ",";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eeg);
 
+        neuroSky = createNeuroSky();
+        brainWaveData = new ArrayList<>();
+
         stateTv = findViewById(R.id.state_tv);
         attentionTv = findViewById(R.id.attention_tv);
-//        meditationTv = findViewById(R.id.tv_meditation);
-//        blinkTv = findViewById(R.id.tv_blink);
-
+        // meditationTv = findViewById(R.id.tv_meditation);
+        // blinkTv = findViewById(R.id.tv_blink);
         connectButton = findViewById(R.id.connect_btn);
+        continueToGSRButton = findViewById(R.id.goto_gsr_btn);
+        startMonitorButton = findViewById(R.id.start_monitoring_btn);
+        stopMonitorButton = findViewById(R.id.stop_monitoring_btn);
+        disconnectButton = findViewById(R.id.disconnect_btn);
+
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,21 +68,17 @@ public class EEGActivity extends AppCompatActivity {
         });
 
 
-        continueToGSRButton = findViewById(R.id.goto_gsr_btn);
         continueToGSRButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                GlobalVarApp globalApp = ((GlobalVarApp)getApplicationContext());
-                // go to the GSR activity
+                // GlobalVarApp globalApp = ((GlobalVarApp)getApplicationContext());
                 Intent i = new Intent(EEGActivity.this, GSRActivity.class);
                 startActivity(i);
-//                Toast.makeText(EEGActivity.this, "hi"+globalApp.getUserName() , Toast.LENGTH_SHORT).show();
+                // Toast.makeText(EEGActivity.this, "hi"+globalApp.getUserName() , Toast.LENGTH_SHORT).show();
             }
         });
 
-        //
-        startMonButton = findViewById(R.id.start_monitoring_btn);
-        startMonButton.setOnClickListener(new View.OnClickListener() {
+        startMonitorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -84,21 +89,41 @@ public class EEGActivity extends AppCompatActivity {
                 }
             }
         });
-        //
-        stopMonButton = findViewById(R.id.stop_monitoring_btn);
-        stopMonButton.setOnClickListener(new View.OnClickListener() {
+
+        stopMonitorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     neuroSky.stopMonitoring();
+
+                    // Package brainwave data and clear
+                    if (brainWaveData.size() > 0) {
+                        String dataCsv = "";
+
+                        // Add header
+                        for (String key : brainWaveData.get(0).keySet()) {
+                            dataCsv += key + SEPARATOR;
+                        }
+                        dataCsv = dataCsv.substring( 0, dataCsv.length() - SEPARATOR.length() - 1 ) + "\n";
+
+                        // Add data
+                        for (HashMap<String, String> row : brainWaveData) {
+                            for (String key : row.keySet()) {
+                                dataCsv += row.get(key) + SEPARATOR;
+                            }
+                            dataCsv = dataCsv.substring( 0, dataCsv.length() - SEPARATOR.length() - 1 ) + "\n";
+                        }
+
+                        Log.d(LOG_TAG, dataCsv);
+                    }
+
                 } catch (BluetoothNotEnabledException e) {
                     Toast.makeText(getBaseContext() ,e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(LOG_TAG, e.getMessage());
                 }
             }
         });
-        //
-        disconnectButton = findViewById(R.id.disconnect_btn);
+
         disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,8 +135,6 @@ public class EEGActivity extends AppCompatActivity {
                 }
             }
         });
-        //
-        neuroSky = createNeuroSky();
     }
     @NonNull
     private NeuroSky createNeuroSky() {
@@ -140,6 +163,27 @@ public class EEGActivity extends AppCompatActivity {
         switch (signal) {
             case ATTENTION:
                 attentionTv.setText(getFormattedMessage("attention: %d", signal));
+
+                HashMap<String, String> dataRow = new HashMap<>();
+
+                dataRow.put("obs", 1 + "");
+                dataRow.put("time", 5.9 + "");
+                dataRow.put("Delta", 52574 + "");
+                dataRow.put("Theta", 21514 + "");
+                dataRow.put("Alpha1", 11594 + "");
+                dataRow.put("Alpha2", 8277 + "");
+                dataRow.put("Beta1", 18599 + "");
+                dataRow.put("Beta2", 13913 + "");
+                dataRow.put("Gamma1", 9731 + "");
+                dataRow.put("Gamma2", 17660 + "");
+                dataRow.put("Attention", signal + "");
+                dataRow.put("Meditation", "NA");
+                dataRow.put("Derived", "NA");
+                dataRow.put("totPwr", "153862");
+                dataRow.put("clpass", "1*");
+
+                brainWaveData.add(dataRow);
+
                 break;
 //            case MEDITATION:
 //                meditationTv.setText(getFormattedMessage("meditation: %d", signal));

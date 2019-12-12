@@ -14,41 +14,41 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    CheckBox eegChk;
-    TextView userNameTV;
-    Button continueBtn;
-    boolean eegSelected;
 
-    GlobalVarApp globalApp;
+    private CheckBox eegChk;
+    private TextView userNameTV;
+    private Button continueBtn;
+    private boolean eegSelected;
+
+    private GlobalVarApp globalApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         userNameTV = findViewById(R.id.username_tv);
+        eegChk = findViewById(R.id.eeg_chk);
+        continueBtn = findViewById(R.id.continue_btn);
 
-        eegChk =findViewById(R.id.eeg_chk);
         eegChk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                // Check which checkbox was clicked
-                eegSelected =checked;
+                eegSelected = ((CheckBox) v).isChecked(); // Check which checkbox was clicked
             }
         });
 
-        continueBtn = findViewById(R.id.continue_btn);
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(eegSelected) {
-                    // go to the eeg activity
-                    CharSequence name = userNameTV.getText();
                     globalApp = ((GlobalVarApp)getApplicationContext());
-                    globalApp.setUserName(name);
+                    CharSequence name = userNameTV.getText();
                     Intent i = new Intent(MainActivity.this, EEGActivity.class);
+
+                    globalApp.setUserName(name);
                     startActivity(i);
-                    Toast.makeText(getBaseContext(), "let's go " + name , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Let's go, " + name + "!" , Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getBaseContext(), "You have to choose at least one of the options" , Toast.LENGTH_SHORT).show();
@@ -56,5 +56,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public static class BrainWaveData {
+        public int
+                obs, delta, theta, alpha1,
+                alpha2, beta1, beta2, gamma1,
+                gamma2, totPwr;
+        public double time;
+        public String attention, meditation, derived, clpass;
+
+        private static final String SEPARATOR = ", ";
+
+        @Override
+        public String toString() {
+            String res = "";
+
+            String[] components = {
+                Integer.toString(obs),
+                Integer.toString(delta),
+                Integer.toString(theta),
+                Integer.toString(alpha1),
+                Integer.toString(alpha2),
+                Integer.toString(beta1),
+                Integer.toString(beta2),
+                Integer.toString(gamma1),
+                Integer.toString(gamma2),
+                Integer.toString(totPwr),
+
+                Double.toString(time),
+
+                attention,
+                meditation,
+                derived,
+                clpass
+            };
+
+            for (String comp : components) {
+                res += comp + SEPARATOR;
+            }
+
+            res = res.substring(0, res.length() - SEPARATOR.length() - 1);
+
+            return res;
+        }
     }
 }
