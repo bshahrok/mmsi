@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">MMSI</string>
+    <string name="Continue">Continue</string>
+    <string name="eeg">EEG</string>
+    <string name="gsr">GSR</string>
+    <string name="eyeTracking">Eye Tracking</string>
+    <string name="record">Record</string>
+    <string name="camera">Camera</string>
+
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="stop_monitoring">Stop monitoring</string>
+    <string name="start_monitoring">Start monitoring</string>
+    <string name="start_recording">Start recording</string>
+    <string name="stop_recording">Stop recording</string>
+
+    <string name="waiting_for_raw_signal">waiting for raw signal...</string>
+    <string name="waiting_for_blink_signal">waiting for blink signal...</string>
+    <string name="waiting_for_meditation_signal">waiting for meditation signal...</string>
+    <string name="waiting_for_attention_signal">waiting for attention signal...</string>
+    <string name="waiting_for_stress_signal">waiting for stress signal...</string>
+    <string name="waiting_for_state">waiting for state...</string>
+    <string name="waiting_EEG_for_state">waiting for EEG data…</string>
+    <string name="waiting_for_GSR_state">waiting for GSR data...</string>
+    <string name="waiting_for_eye_signal">waiting for eye tracking data...</string>
+    <string name="mo_EEG_data">no EEG data…</string>
+    <string name="no_GSR_data">no GSR data...</string>
+    <string name="no_eye_data">no eye tracking data...</string>
+    <string name="enter_a_name">Enter a name</string>
+    <string name="title_activity_record">RecordActivity</string>
+</resources>
