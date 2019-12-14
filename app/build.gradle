@@ -13,6 +13,11 @@ android {
 //        ndk {
 //            abiFilters "armeabi-v7a", "x86"
 //        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
     repositories {
         maven { url "https://jitpack.io" }
@@ -38,6 +43,9 @@ dependencies {
     implementation 'com.github.pwittchen:neurosky-android-sdk:0.0.2'
     // depends on MpAndroidChart library
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+    // depends on OKHTTP library
+    implementation 'com.squareup.okhttp3:okhttp:3.3.1'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(path: ':ESenseLib')

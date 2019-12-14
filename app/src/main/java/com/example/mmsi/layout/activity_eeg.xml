@@ -28,12 +28,12 @@
             android:text="@string/waiting_for_attention_signal"
             />
 
-<!--        <TextView-->
-<!--            android:id="@+id/tv_meditation"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="15dp"-->
-<!--            android:text="@string/waiting_for_meditation_signal" />-->
+        <TextView
+            android:id="@+id/tv_meditation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="@string/waiting_for_meditation_signal" />
 
 <!--        <TextView-->
 <!--            android:id="@+id/tv_blink"-->

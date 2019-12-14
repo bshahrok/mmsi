@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
 
@@ -17,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExtraText"
-        android:name=".GlobalVarApp">
+        android:name=".GlobalVarApp"
+        android:usesCleartextTraffic="true">
 
         <activity android:name=".DisplayActivity" />
         <activity android:name=".GSRActivity" />

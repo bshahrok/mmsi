@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +19,15 @@ import io.esense.esenselib.ESenseSensorListener;
 
 public class GSRActivity extends AppCompatActivity implements ESenseSensorListener, ESenseConnectionListener, ESenseEventListener {
     private static final String TAG = "eSense";
-    Button continueGSRBtn;
-    Button connectGSRButton;
+    private static final String sensorName = "eSense-0615";
+
+    private String serverData;
+
     private ESenseManager manager;
-    private String sensorName = "eSense-0615";
+
+    private TextView serverDataMessage;
+    private Button continueGSRBtn;
+    private Button connectGSRButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,34 +36,34 @@ public class GSRActivity extends AppCompatActivity implements ESenseSensorListen
         setContentView(R.layout.activity_gsr);
 
         continueGSRBtn = findViewById(R.id.continue_gsr_btn);
-        continueGSRBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // go to the eeg activity
-                Intent i = new Intent(GSRActivity.this, DisplayActivity.class);
-                startActivity(i);
-            }
+        continueGSRBtn.setOnClickListener((View v) -> {
+            Intent i = new Intent(GSRActivity.this, DisplayActivity.class);
+            startActivity(i);
         });
+
         connectGSRButton = findViewById(R.id.connect_gsr_btn);
-        connectGSRButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Sensor not connected!", Toast.LENGTH_LONG).show();
-            }
+        connectGSRButton.setOnClickListener((View v) -> {
+            Toast.makeText(getBaseContext(), "Sensor not connected!", Toast.LENGTH_LONG).show();
         });
+
+        serverData = getIntent().getStringExtra(EEGActivity.SERVER_DATA_MSG);
+        serverDataMessage = findViewById(R.id.server_data_msg);
+        serverDataMessage.setText(serverData);
+
         manager = createESenseManager();
     }
 
     private ESenseManager createESenseManager () {
         manager = new ESenseManager(sensorName, getBaseContext());
-        Log.d(TAG, "manager created!" + manager.getDeviceName());
+        // Log.d(TAG, "Manager created!" + manager.getDeviceName());
         return manager;
     }
+
     @Override
     protected void onStart() {
         super.onStart();
 
-        // hooke th buttons with the listeners
+        // Hook the buttons with the listeners
         findViewById(R.id.continue_gsr_btn).setOnClickListener(handleClick);
         findViewById(R.id.disconnect_gsr_btn).setOnClickListener(handleClick);
         findViewById(R.id.register_listen_gsr_btn ).setOnClickListener(handleClick);
@@ -65,20 +71,17 @@ public class GSRActivity extends AppCompatActivity implements ESenseSensorListen
     }
 
 
-    private View.OnClickListener handleClick = new View.OnClickListener() {
-//        listen for clicks
-//        ESSL mESSL = null;
-        @Override
-        public void onClick(View v) {
-            Button btn = (Button)v;
-            switch(btn.getId()){
-                case R.id.connect_gsr_btn:
-                    manager = createESenseManager();
-                    manager.connect(10000);
-                    break;
-            }
+    private View.OnClickListener handleClick = (View v) -> {
+        Button btn = (Button) v;
+
+        switch(btn.getId()){
+            case R.id.connect_gsr_btn:
+                manager = createESenseManager();
+                manager.connect(10000);
+                break;
         }
     };
+
     /**
      * Called when the device with the specified name has been found during a scan
      *
